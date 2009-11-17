@@ -32,14 +32,14 @@ function f_b64(prod, b64memoize)
 			local ret = {}
 			local mod = s:len() % 3
 			for i = 1, s:len() - mod, 3 do
-				local sub3 = s:sub(i, i + 3)
+				local sub3 = s:sub(i, i + 2)
 				table.insert(ret, tob64(sub3))
 			end
 			if coroutine.status(prod) == "dead" and mod > 0 then
 				local subs = s:sub(s:len() - mod, -1)
 				local padd = 3 - subs:len()
 				subs = tob64(subs .. ("\000"):rep(padd))
-				table.insert(ret, subs:sub(1, 4 - padd) .. ("="):rep(padd))
+				table.insert(ret, subs:sub(1, 3 - padd) .. ("="):rep(padd))
 			end
 			if mod == 0 then s = "" else s = s:sub(-mod) end
 			if padd ~= 0 then table.insert(ret, string.rep("=", padd)) end
@@ -84,6 +84,4 @@ function consumer(prod)
 	end
 end
 
-local t = {}
-consumer(f_b64(producer_file(...), t))
-consumer(f_b64(producer_file(...), t))
+consumer(f_b64(producer_file(...), false))
