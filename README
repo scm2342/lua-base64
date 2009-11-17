@@ -1,0 +1,19 @@
+This is a implementation of bas64encoding in plain lua.
+
+lua is, like most languages, slow in string concatination.
+We had a discussion about that at ccc hamburg, so we have
+the idea to test this encoding with a hashmap to try, if
+this is faster than encoding straid ahead to test performace.
+So already encoded 3 bytes can loaded from hashmap insteed of
+recoding it again (which is expensive).
+
+We tried this code on a 200kb /dev/random file and 1Mb linux
+c code (krypto part). The random file is slower on the memoized
+function - of course. But on c code, it is more than 2 times
+faster.
+
+Future ideas are to make it in a module and a weak hashmap
+to reduce memory consumtion.
+
+Happy hacking.
+
